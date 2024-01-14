@@ -1,21 +1,22 @@
 import axiosInstance from "../helpers/http.common.helper"
 
-export function login(SourceUserInput: string,TargetUserInput: string,task_id: number): Promise<any> {
+export function login(username: string,password: string): Promise<any> {
 
     const options = {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Access-Control-Request-Method": "POST",
         },
-        data: {
-            username: "219113",
-            password: "admin"
-        }
+        username: username,
+        password: password
+
+
     }
 
     return new Promise((resolve, reject) => {
         axiosInstance
             .post("/auth/login", options)
-            .then(response => resolve(response.data))
+            .then(response => resolve(response))
             .catch(error => {
                 console.error(error);
                 reject(error);
