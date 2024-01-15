@@ -22,9 +22,12 @@ import {BrowserRouter, Link} from "react-router-dom"
 import CottageRoundedIcon from '@mui/icons-material/CottageRounded';
 
 // Type rsf for creating a ready to populate component
-const drawerWidth = 240;
+const drawerWidth = 190;
 
 function NavbarCoponent({ children }: any) {
+
+    const role = localStorage.getItem('role');
+
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
 
@@ -47,7 +50,24 @@ function NavbarCoponent({ children }: any) {
         <div>
             <Toolbar />
             <Divider />
+            {localStorage.getItem('role') == 'ROLE_ADMIN' && (
+                <List>
+                    <Link to={"/"} style={{ textDecoration: "none", color: "#555E68" }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CottageRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Home"}/>
+                        </ListItemButton>
+                    </Link>
+
+                </List>
+            )}
+
+            {localStorage.getItem('role') == 'ROLE_EMPLOYEE' && (
             <List>
+
+
                 <Link to={"/"} style={{ textDecoration: "none", color: "#555E68" }}>
                     <ListItemButton>
                         <ListItemIcon>
@@ -57,43 +77,64 @@ function NavbarCoponent({ children }: any) {
                     </ListItemButton>
                 </Link>
 
-                <Link to={"/admin_panel"} style={{ textDecoration: "none", color: "#555E68" }}>
+                <Divider />
+
+                <Link to={"/forms/employee/all"} style={{ textDecoration: "none", color: "#555E68" }}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <AddchartRoundedIcon />
+                            <CottageRoundedIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"Admin Panel"}/>
+                        <ListItemText primary={"All Forms in the systemm"}/>
                     </ListItemButton>
                 </Link>
 
-                <Link to={"/forms/farmer"} style={{ textDecoration: "none", color: "#555E68" }}>
+                <Link to={"/forms/employee/unprocessed"} style={{ textDecoration: "none", color: "#555E68" }}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <ContactsRoundedIcon />
+                            <CottageRoundedIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"Farmer Forms"}/>
+                        <ListItemText primary={"Unprocessed Forms"}/>
                     </ListItemButton>
                 </Link>
 
-                <Link to={"/forms/employee"} style={{ textDecoration: "none", color: "#555E68" }}>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <ContactsRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Employee Forms"}/>
-                    </ListItemButton>
-                </Link>
-
-                {/*<ListItemButton>*/}
-                {/*    <ListItemIcon>*/}
-                {/*        <LoginRoundedIcon />*/}
-                {/*    </ListItemIcon>*/}
-                {/*    <ListItemText>*/}
-                {/*        <Link to={"/login"}>LogIn Page</Link>*/}
-                {/*    </ListItemText>*/}
-                {/*</ListItemButton>*/}
 
             </List>
+                )}
+
+            {localStorage.getItem('role') == 'ROLE_FARMER' && (
+                <List>
+
+                    <Link to={"/"} style={{ textDecoration: "none", color: "#555E68" }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CottageRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Home"}/>
+                        </ListItemButton>
+                    </Link>
+
+                    <Divider />
+
+                    <Link to={"/forms/farmer"} style={{ textDecoration: "none", color: "#555E68" }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CottageRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Your Forms"}/>
+                        </ListItemButton>
+                    </Link>
+
+                    <Link to={"/forms/create"} style={{ textDecoration: "none", color: "#555E68" }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CottageRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Create New Form"}/>
+                        </ListItemButton>
+                    </Link>
+
+                </List>
+            )}
             <Divider />
         </div>
     );
@@ -165,7 +206,11 @@ function NavbarCoponent({ children }: any) {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
+
+
                 { children }
+
+
             </Box>
         </Box>
     );

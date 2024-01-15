@@ -38,18 +38,28 @@ function Item(props: BoxProps) {
 
 function App() {
 
+    const username = localStorage.getItem('username');
+
     return (
 
         <div className="App">
             <BrowserRouter>
-                <NavbarCoponent>
+                {!username && (
                     <Routes>
-                        <Route path={"/admin_panel"} element={ <AdminPanelComponentPage /> }/>
-                        <Route path={"//forms/farmer"} element={ <FarmerPanelComponentPage /> }/>
-                        <Route path={"/forms/employee"} element={ <EmployeePanelComponentPage /> }/>
                         <Route path={"/"} element={ <HomeCoponentPage /> }/>
                     </Routes>
-                </NavbarCoponent>
+                )}
+
+                {username && (
+                    <NavbarCoponent>
+                        <Routes>
+                            <Route path={"/admin_panel"} element={ <AdminPanelComponentPage /> }/>
+                            <Route path={"/forms/farmer"} element={ <FarmerPanelComponentPage /> }/>
+                            <Route path={"/forms/employee/all"} element={ <EmployeePanelComponentPage /> }/>
+                            <Route path={"/"} element={ <HomeCoponentPage /> }/>
+                        </Routes>
+                    </NavbarCoponent>
+                    )}
             </BrowserRouter>
         </div>
     );

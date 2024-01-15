@@ -9,31 +9,51 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
-import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import Box, {BoxProps} from "@mui/material/Box";
-import Button from '@mui/material/Button';
 
-export default function LogInComp() {
+import Button from '@mui/material/Button';
+import {jwtDecode} from "jwt-decode";
+import {JwtDecoded} from "../types/login.types";
+import {redirect, useNavigate} from "react-router-dom";
+
+export default function LogInComp(props: any) {
+
+    const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleChange = () => {
-        login(username, password).then(res => {
 
-            console.log('Username:', username);
-            console.log('Password:', password);
+        login(username, password).then(res => {
             // Check if the response has a token
             if (res.data && res.data.token && res.data.username) {
 
-                const newToken = res.data.token;
+                const decoded: JwtDecoded = jwtDecode(res.data.token);
 
-                localStorage.setItem('AuthToken', newToken);
+                localStorage.setItem('AuthToken', res.data.token);
                 localStorage.setItem('username', res.data.username);
+                localStorage.setItem('role', decoded.roles);
 
-                // Save the token to the local variable and state
-                console.log('Token:', newToken);
+
+                // Redirect based on the user's role
+                switch (decoded.roles) {
+                    case 'ROLE_FARMER':
+                        navigate('/forms/farmer')
+                        window.location.reload()
+                        break;
+                    case 'ROLE_EMPLOYEE':
+                        navigate('/forms/employee/all')
+                        window.location.reload()
+                        break;
+                    case 'ROLE_ADMIN':
+                        navigate('/admin_panel')
+                        window.location.reload()
+                        break;
+                    default:
+                        // Handle other roles or cases
+                        break;
+                }
+
             } else {
                 // Handle the case when there is no token in the response
                 console.log('No token in the response');
