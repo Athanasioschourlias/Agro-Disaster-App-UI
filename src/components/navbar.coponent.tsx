@@ -88,15 +88,6 @@ function NavbarCoponent({ children }: any) {
                     </ListItemButton>
                 </Link>
 
-                <Link to={"/forms/employee/unprocessed"} style={{ textDecoration: "none", color: "#555E68" }}>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <CottageRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={"Unprocessed Forms"}/>
-                    </ListItemButton>
-                </Link>
-
 
             </List>
                 )}
@@ -124,7 +115,7 @@ function NavbarCoponent({ children }: any) {
                         </ListItemButton>
                     </Link>
 
-                    <Link to={"/forms/create"} style={{ textDecoration: "none", color: "#555E68" }}>
+                    <Link to={"/forms/farmer/create"} style={{ textDecoration: "none", color: "#555E68" }}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <CottageRoundedIcon />

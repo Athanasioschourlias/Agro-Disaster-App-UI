@@ -15,6 +15,7 @@ import AdminPanelComponentPage from "./components/admin_panel.component.page";
 import HomeCoponentPage from "./components/home.coponent.page";
 import EmployeePanelComponentPage from "./components/employee_panel.component.page";
 import FarmerPanelComponentPage from "./components/farmer_panel.component.page";
+import NewFormPage from "./components/new_form.page";
 
 function Item(props: BoxProps) {
     const { sx, ...other } = props;
@@ -54,8 +55,12 @@ function App() {
                     <NavbarCoponent>
                         <Routes>
                             <Route path={"/admin_panel"} element={ <AdminPanelComponentPage /> }/>
+
                             <Route path={"/forms/farmer"} element={ <FarmerPanelComponentPage /> }/>
+                            <Route path={"/forms/farmer/create"} element={ <NewFormPage /> }/>
+
                             <Route path={"/forms/employee/all"} element={ <EmployeePanelComponentPage /> }/>
+
                             <Route path={"/"} element={ <HomeCoponentPage /> }/>
                         </Routes>
                     </NavbarCoponent>
