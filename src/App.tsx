@@ -16,6 +16,7 @@ import HomeCoponentPage from "./components/home.coponent.page";
 import EmployeePanelComponentPage from "./components/employee_panel.component.page";
 import FarmerPanelComponentPage from "./components/farmer_panel.component.page";
 import NewFormPage from "./components/new_form.page";
+import ScheduleApointmentEmployeePage from "./components/schedule_apointment_employee.page";
 
 function Item(props: BoxProps) {
     const { sx, ...other } = props;
@@ -60,6 +61,7 @@ function App() {
                             <Route path={"/forms/farmer/create"} element={ <NewFormPage /> }/>
 
                             <Route path={"/forms/employee/all"} element={ <EmployeePanelComponentPage /> }/>
+                            <Route path={"/forms/employee/schedule/appointment"} element={ <ScheduleApointmentEmployeePage /> }/>
 
                             <Route path={"/"} element={ <HomeCoponentPage /> }/>
                         </Routes>

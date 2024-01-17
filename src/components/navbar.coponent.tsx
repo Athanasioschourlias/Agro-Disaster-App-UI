@@ -12,7 +12,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ContactsRoundedIcon from '@mui/icons-material/ContactsRounded';
-
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddchartRoundedIcon from '@mui/icons-material/AddchartRounded';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,6 +20,8 @@ import Typography from '@mui/material/Typography';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import {BrowserRouter, Link} from "react-router-dom"
 import CottageRoundedIcon from '@mui/icons-material/CottageRounded';
+import ForwardToInboxRoundedIcon from '@mui/icons-material/ForwardToInboxRounded';
+import NoteAddRoundedIcon from '@mui/icons-material/NoteAddRounded';
 
 // Type rsf for creating a ready to populate component
 const drawerWidth = 190;
@@ -50,7 +52,7 @@ function NavbarCoponent({ children }: any) {
         <div>
             <Toolbar />
             <Divider />
-            {localStorage.getItem('role') == 'ROLE_ADMIN' && (
+            {localStorage.getItem('role') === 'ROLE_ADMIN' && (
                 <List>
                     <Link to={"/"} style={{ textDecoration: "none", color: "#555E68" }}>
                         <ListItemButton>
@@ -64,7 +66,7 @@ function NavbarCoponent({ children }: any) {
                 </List>
             )}
 
-            {localStorage.getItem('role') == 'ROLE_EMPLOYEE' && (
+            {localStorage.getItem('role') === 'ROLE_EMPLOYEE' && (
             <List>
 
 
@@ -82,17 +84,24 @@ function NavbarCoponent({ children }: any) {
                 <Link to={"/forms/employee/all"} style={{ textDecoration: "none", color: "#555E68" }}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <CottageRoundedIcon />
+                            <FormatListBulletedRoundedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"All Forms in the systemm"}/>
+                    </ListItemButton>
+                </Link>
+                <Link to={"/forms/employee/schedule/appointment"} style={{ textDecoration: "none", color: "#555E68" }}>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <ForwardToInboxRoundedIcon />
                         </ListItemIcon>
                         <ListItemText primary={"All Forms in the systemm"}/>
                     </ListItemButton>
                 </Link>
 
-
             </List>
                 )}
 
-            {localStorage.getItem('role') == 'ROLE_FARMER' && (
+            {localStorage.getItem('role') === 'ROLE_FARMER' && (
                 <List>
 
                     <Link to={"/"} style={{ textDecoration: "none", color: "#555E68" }}>
@@ -109,7 +118,7 @@ function NavbarCoponent({ children }: any) {
                     <Link to={"/forms/farmer"} style={{ textDecoration: "none", color: "#555E68" }}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <CottageRoundedIcon />
+                                <FormatListBulletedRoundedIcon />
                             </ListItemIcon>
                             <ListItemText primary={"Your Forms"}/>
                         </ListItemButton>
@@ -118,7 +127,7 @@ function NavbarCoponent({ children }: any) {
                     <Link to={"/forms/farmer/create"} style={{ textDecoration: "none", color: "#555E68" }}>
                         <ListItemButton>
                             <ListItemIcon>
-                                <CottageRoundedIcon />
+                                <NoteAddRoundedIcon />
                             </ListItemIcon>
                             <ListItemText primary={"Create New Form"}/>
                         </ListItemButton>

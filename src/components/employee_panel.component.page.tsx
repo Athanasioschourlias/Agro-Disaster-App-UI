@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Form} from "../types/Form";
+import {editFormType, Form} from "../types/Form";
 import {delete_form_by_id, get_all_farmer_forms} from "../services/farmer.service";
-import {get_all_forms} from "../services/employee.forms";
+import {edit_form_by_id, get_all_forms} from "../services/employee.forms";
 import Table from "@mui/joy/Table";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Sheet from "@mui/joy/Sheet";
 import {Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, TextField} from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
 function EmployeePanelComponentPage(props: any) {
 
@@ -14,6 +16,8 @@ function EmployeePanelComponentPage(props: any) {
 
     const [status, setStatus] = React.useState('')
     const [openEdit, setOpenEdit] = React.useState(false)
+    const [editFormId, setEditFormId] = React.useState(-1)
+
     const populateList = () => {
         // Perform data fetching or any other logic to populate the list
         // For example, you might fetch data from an API
@@ -34,9 +38,16 @@ function EmployeePanelComponentPage(props: any) {
 
     const handleStatusUpdate = (event: any) => {
 
-        setStatus(event.target.value);
-
+        // setStatus(event.target.value);
+        console.log(event.target.value)
     };
+
+    const handleOpenEdit = (formId: number) => {
+        setEditFormId(formId)
+        setOpenEdit(true)
+    };
+
+    const navigate = useNavigate();
 
     return (
         <Sheet
@@ -93,57 +104,69 @@ function EmployeePanelComponentPage(props: any) {
                             <td>{form.location}</td>
                             <td>{form.acres}</td>
                             <td>{form.cropType}</td>
-                            <td>{form.status}</td>
+                            <td>
+                                <Select
+
+                                    value={form.status}
+                                    label="Age"
+                                    sx={{
+                                        width: 'auto',
+                                        height: 40,
+                                        marginRight: 15,
+                                        border: "1px solid",
+                                        color: "#fff",
+                                    }}
+                                    onChange={(event) => {
+
+
+                                        if (event.target.value === form.status)
+                                            console.log("The change of status: " + event.target.value + "to status: " + form.status + "is pointless")
+
+                                        let newStatusForm: editFormType = {
+                                            location: form.location,
+                                            damageDescription: form.damageDescription,
+                                            acres: form.acres,
+                                            cropType: form.cropType,
+                                            status: form.status
+                                        };
+
+                                        newStatusForm.status = event.target.value
+
+                                        if(event.target.value === 'APPOINTMENT'){
+                                            // store farmer mail to local memory
+                                            localStorage.setItem('farmerMail', form.user.email)
+
+                                            edit_form_by_id(form.id, newStatusForm).then(() => {
+
+                                                console.log("The status of the form changed successfully")
+
+                                                navigate('/forms/employee/schedule/appointment')
+
+                                            }).catch((e) => {
+                                                console.log("The was an error while updating the form" + e)
+                                            })
+                                        }
+
+
+                                        edit_form_by_id(form.id, newStatusForm).then(() => {
+                                            console.log("The status of the form changed successfully")
+                                        }).catch((e) => {
+                                            console.log("The was an error while updating the form" + e)
+                                        })
+
+
+
+                                    }}
+                                >
+                                    <MenuItem value={'PENDING'}>PENDING</MenuItem>
+                                    <MenuItem value={'APPROVED'}>APPROVED</MenuItem>
+                                    <MenuItem value={'REJECTED'}>REJECTED</MenuItem>
+                                    <MenuItem value={'APPOINTMENT'}>Schedule Appointment</MenuItem>
+                                </Select>
+                            </td>
                             <td style={{overflowWrap: 'break-word'}}>{form.damageDescription}</td>
                             <td>
                                 <Box sx={{display: 'flex', gap: 1}}>
-                                    <Button variant="outlined" color="primary" >
-                                        Edit
-                                    </Button>
-                                    <Dialog
-                                        open={openEdit}
-                                        PaperProps={{
-                                            component: 'form',
-                                            onSubmit: handleStatusUpdate,
-                                        }}
-                                    >
-                                        <DialogTitle>Register New user</DialogTitle>
-                                        <DialogContent>
-                                            <TextField
-                                                autoFocus
-                                                required
-                                                margin="dense"
-                                                id="firstname"
-                                                name="firstname"
-                                                label="First name"
-                                                type="string"
-                                                fullWidth
-                                                variant="standard"
-
-                                            />
-                                            <Select
-                                                autoFocus
-                                                required
-                                                labelId="status"
-                                                id="status"
-                                                value={status}
-                                                label="Status"
-                                                onChange={() => {handleStatusUpdate(status)}}
-                                            >
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button >Cancel</Button>
-                                            <Button type="submit">Submit New Status</Button>
-                                        </DialogActions>
-                                    </Dialog>
-
-
-
                                     <Button variant="solid" color="danger" onClick={() => {
                                         delete_form_by_id(form.id).then((res) => {
                                             console.log(res)

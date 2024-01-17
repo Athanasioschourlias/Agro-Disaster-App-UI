@@ -7,5 +7,13 @@ export type Form = {
     damageDescription: string;
     acres: number;
     cropType: string;
-    status: "PENDING" | "APPROVED" | "REJECTED"; // Assuming status can only be one of these values
+    status: string; // Assuming status can only be one of these values "PENDING" | "APPROVED" | "REJECTED" | "APPOINTMENT"
 };
+
+export type editFormType = {
+    location: string;
+    damageDescription: string;
+    acres: number;
+    cropType: string;
+    status: string;
+}
