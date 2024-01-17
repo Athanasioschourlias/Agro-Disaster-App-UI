@@ -64,12 +64,6 @@ function UserComponent(props :any) {
         setRoles(event.target.value);
 
     };
-
-
-    const handlesSubmitForm = () => {
-
-        setOpenEdit(false)
-    };
     const handleClickOpenEdit = () => {
         setOpenEdit(true)
     };
@@ -77,9 +71,6 @@ function UserComponent(props :any) {
 
         setOpenEdit(false);
     };
-
-
-
 
 
     const handleClickOpen = () => {
@@ -98,7 +89,6 @@ function UserComponent(props :any) {
         })
 
     };
-
     const handleCloseNo = () => {
         setOpen(false)
     };
@@ -188,18 +178,16 @@ function UserComponent(props :any) {
                 }}
             >
                 {/*Edit User dialogue and button*/}
-                <Button variant="solid" color="primary" onClick={handleClickOpenEdit}>
+                <Button variant="solid" color="primary" onClick={() => {
+                    setOpenEdit(true)
+                }}>
                     Edit
                 </Button>
                 <Dialog
                     open={openEdit}
                     onClose={handleCloseEdit}
-                    PaperProps={{
-                        component: 'form',
-                        onSubmit: handlesSubmitForm,
-                    }}
                 >
-                    <DialogTitle>Register New user</DialogTitle>
+                    <DialogTitle>Edit User</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
@@ -270,7 +258,9 @@ function UserComponent(props :any) {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseEdit}>Cancel</Button>
-                        <Button type="submit">Create New User</Button>
+                        <Button onClick={() => {
+                            setOpenEdit(false)
+                        }}>Create New User</Button>
                     </DialogActions>
                 </Dialog>
 

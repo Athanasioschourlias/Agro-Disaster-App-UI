@@ -66,3 +66,28 @@ export function create_form(location: string, acres: number, cropType: string, d
             })
     })
 }
+
+export function edit_form(location: string, acres: string, cropType: string, damageDesc: string,formId: number): Promise<any> {
+
+    const options = {
+        headers: {
+            "Content-Type": "application/json",
+
+        },
+        "location": location,
+        "acres": acres,
+        "cropType": cropType,
+        "damageDescription": damageDesc
+
+    }
+
+    return new Promise((resolve, reject) => {
+        axiosInstance
+            .put(`/farmer/compensation/edit/form/${formId}`, options)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error(error);
+                reject(error);
+            })
+    })
+}
