@@ -94,7 +94,7 @@ function NavbarCoponent({ children }: any) {
                         <ListItemIcon>
                             <ForwardToInboxRoundedIcon />
                         </ListItemIcon>
-                        <ListItemText primary={"All Forms in the systemm"}/>
+                        <ListItemText primary={"Arrange Appointment"}/>
                     </ListItemButton>
                 </Link>
 

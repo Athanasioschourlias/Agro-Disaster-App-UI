@@ -135,7 +135,7 @@ function EmployeePanelComponentPage(props: any) {
                                         if(event.target.value === 'APPOINTMENT'){
                                             // store farmer mail to local memory
                                             localStorage.setItem('farmerMail', form.user.email)
-
+                                            navigate('/forms/employee/schedule/appointment')
                                             edit_form_by_id(form.id, newStatusForm).then(() => {
 
                                                 console.log("The status of the form changed successfully")
@@ -145,16 +145,15 @@ function EmployeePanelComponentPage(props: any) {
                                             }).catch((e) => {
                                                 console.log("The was an error while updating the form" + e)
                                             })
+                                        } else {
+
+                                            edit_form_by_id(form.id, newStatusForm).then(() => {
+                                                console.log("The status of the form changed successfully")
+                                            }).catch((e) => {
+                                                console.log("The was an error while updating the form" + e)
+                                            })
+
                                         }
-
-
-                                        edit_form_by_id(form.id, newStatusForm).then(() => {
-                                            console.log("The status of the form changed successfully")
-                                        }).catch((e) => {
-                                            console.log("The was an error while updating the form" + e)
-                                        })
-
-
 
                                     }}
                                 >

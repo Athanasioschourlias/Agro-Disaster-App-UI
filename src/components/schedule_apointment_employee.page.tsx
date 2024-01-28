@@ -69,7 +69,7 @@ function ScheduleApointmentEmployeePage(props: any) {
             }}
         >
             <Typography level="title-lg" startDecorator={<InfoOutlined />}>
-                Create New User
+                Schedule New Appointment
             </Typography>
             <Divider inset="none" />
             <CardContent
@@ -84,7 +84,7 @@ function ScheduleApointmentEmployeePage(props: any) {
                     <Input endDecorator={<EmailRoundedIcon />} value={famrerMail} onChange={(e) => setFarmerMail(e.target.value)}/>
                 </FormControl>
                 <FormControl>
-                    <FormLabel>Date of the apointment to be set</FormLabel>
+                    <FormLabel>Date of the appointment to be set</FormLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Controlled picker"
@@ -116,7 +116,7 @@ function ScheduleApointmentEmployeePage(props: any) {
                 </FormControl>
                 <CardActions sx={{ gridColumn: '1/-1' }}>
                     <Button variant="solid" color="primary" onClick={handleFormSubmit }>
-                        Create New Form
+                        Arange Apointment & Notify User
                     </Button>
                 </CardActions>
             </CardContent>
