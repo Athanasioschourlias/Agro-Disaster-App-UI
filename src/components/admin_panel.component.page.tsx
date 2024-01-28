@@ -1,41 +1,52 @@
-import React, {useEffect, useState} from 'react';
-
-import {get_all_users} from "../services/admin.service";
+import React, { useEffect, useState } from 'react';
+import { get_all_users } from "../services/admin.service";
 import UserComponent from "./user.component";
-import {User} from "../types/user";
+import { User } from "../types/user";
 import Box from "@mui/material/Box";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
-
-function AdminPanelComponentPage(props: any) {
-
-    // State to store your list data
+function AdminPanelComponentPage() {
     const [listData, setListData] = useState<User[]>([]);
+    const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const populateList = () => {
-        // Perform data fetching or any other logic to populate the list
-        // For example, you might fetch data from an API
-        // Replace the following with your actual data fetching logic
         get_all_users()
             .then((res: User[]) => {
-                setListData(res)
+                setListData(res);
             })
-            .catch(error => console.error('Error fetching data:', error));
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                setErrorMessage('Failed to fetch users. Please try again.');
+                setIsErrorDialogOpen(true);
+            });
     };
 
-    // useEffect to call the function when the component is loaded
     useEffect(() => {
         populateList();
-        // The empty dependency array ensures that this effect runs only once on component mount
     }, []);
 
     return (
-        <Box sx={{ display: 'inline-flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
+        <>
+            <Box sx={{ display: 'inline-flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
+                {listData.map((user, i) => <UserComponent userObj={user} key={i} />)}
+            </Box>
 
-            {listData.map((user, i) => <UserComponent userObj={user}  key={i} />)}
-
-        </Box>
-
-
+            <Dialog open={isErrorDialogOpen} onClose={() => setIsErrorDialogOpen(false)}>
+                <DialogTitle>Error</DialogTitle>
+                <DialogContent>
+                    <Typography>{errorMessage}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsErrorDialogOpen(false)}>OK</Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }
 

@@ -46,7 +46,7 @@ function NewFormPage(props: any) {
             }}
         >
             <Typography level="title-lg" startDecorator={<InfoOutlined />}>
-                Create New User
+                Create New Form
             </Typography>
             <Divider inset="none" />
             <CardContent

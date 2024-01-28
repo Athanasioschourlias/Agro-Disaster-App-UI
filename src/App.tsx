@@ -17,6 +17,9 @@ import EmployeePanelComponentPage from "./components/employee_panel.component.pa
 import FarmerPanelComponentPage from "./components/farmer_panel.component.page";
 import NewFormPage from "./components/new_form.page";
 import ScheduleApointmentEmployeePage from "./components/schedule_apointment_employee.page";
+import AdminPanelComponentPageForms from "./components/admin_forms.page";
+import AdminRegisterUser from "./components/admin_new_user.page";
+
 
 function Item(props: BoxProps) {
     const { sx, ...other } = props;
@@ -56,6 +59,10 @@ function App() {
                     <NavbarCoponent>
                         <Routes>
                             <Route path={"/admin_panel"} element={ <AdminPanelComponentPage /> }/>
+                            <Route path={"/admin_forms"} element={ <AdminPanelComponentPageForms /> }/>
+                            <Route path={"/register"} element={ <AdminRegisterUser /> }/>
+
+
 
                             <Route path={"/forms/farmer"} element={ <FarmerPanelComponentPage /> }/>
                             <Route path={"/forms/farmer/create"} element={ <NewFormPage /> }/>

@@ -54,12 +54,28 @@ function NavbarCoponent({ children }: any) {
             <Divider />
             {localStorage.getItem('role') === 'ROLE_ADMIN' && (
                 <List>
-                    <Link to={"/"} style={{ textDecoration: "none", color: "#555E68" }}>
+                    <Link to={"/admin_panel"} style={{ textDecoration: "none", color: "#555E68" }}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <CottageRoundedIcon />
                             </ListItemIcon>
-                            <ListItemText primary={"Home"}/>
+                            <ListItemText primary={"Users"}/>
+                        </ListItemButton>
+                    </Link>
+                    <Link to={"/register"} style={{ textDecoration: "none", color: "#555E68" }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CottageRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Register User"}/>
+                        </ListItemButton>
+                    </Link>
+                    <Link to={"/admin_forms"} style={{ textDecoration: "none", color: "#555E68" }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CottageRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Forms"}/>
                         </ListItemButton>
                     </Link>
 

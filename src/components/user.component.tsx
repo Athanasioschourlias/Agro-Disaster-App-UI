@@ -1,16 +1,17 @@
-import React, {useState} from 'react';
-import {AspectRatio, CardOverflow, Chip} from "@mui/joy";
+import React, { useState } from 'react';
+import { AspectRatio, CardOverflow, Chip } from "@mui/joy";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import Typography from "@mui/joy/Typography";
 import CardContent from "@mui/joy/CardContent";
 import CardActions from "@mui/joy/CardActions";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
-import {User} from "../types/user"
-import Box from "@mui/material/Box";
 import { TransitionProps } from '@mui/material/transitions';
-import {Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, TextField} from "@mui/material";
-import {delete_user_by_tin} from "../services/admin.service";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Select, Slide, TextField, useMediaQuery } from "@mui/material";
+import { delete_user_by_tin } from "../services/admin.service";
+import { useTheme } from '@mui/material/styles';
+import { edit_user } from "../services/admin.service";
+
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -21,7 +22,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function UserComponent(props :any) {
+function UserComponent(props: any) {
 
 
     const [open, setOpen] = React.useState(false)
@@ -32,7 +33,11 @@ function UserComponent(props :any) {
     const [firstName, setFirstName] = React.useState('')
     const [LastName, setLastName] = React.useState('')
     const [tinNumber, setTinNumber] = React.useState('')
-    const [roles, setRoles] = React.useState([])
+    const [role, setRole] = React.useState('')
+
+    const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
+    const [isSubmissionErrorDialogOpen, setIsSubmissionErrorDialogOpen] = useState(false);
+    const [submissionErrorMessage, setSubmissionErrorMessage] = useState('');
 
     const handleChangeEmail = (event: any) => {
 
@@ -61,7 +66,7 @@ function UserComponent(props :any) {
     };
     const handleChangeRole = (event: any) => {
 
-        setRoles(event.target.value);
+        setRole(event.target.value);
 
     };
     const handleClickOpenEdit = () => {
@@ -72,23 +77,24 @@ function UserComponent(props :any) {
         setOpenEdit(false);
     };
 
-
     const handleClickOpen = () => {
         setOpen(true)
     };
 
     const handleCloseYes = (tin: string) => {
-
         delete_user_by_tin(tin).then(() => {
-            setOpen(false)
-
-            window.location.reload()
-        }).catch( (e) => {
-            console.log(e)
-
-        })
-
+            setOpen(false);
+            window.location.reload();
+        }).catch((e) => {
+            console.log(e);
+            setSubmissionErrorMessage('Failed to delete user. Please try again.');
+            setIsErrorDialogOpen(true);
+        });
     };
+
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+
     const handleCloseNo = () => {
         setOpen(false)
     };
@@ -99,10 +105,9 @@ function UserComponent(props :any) {
             sx={{
                 textAlign: 'center',
                 alignItems: 'center',
-                width: '30%',
+                width: isXs ? '100%' : '30%',
                 my: 4,
-                mx: 2,
-                // to make the demo resizable
+                mx: isXs ? 0 : 2,
                 overflow: 'auto',
                 resize: 'horizontal',
                 '--icon-size': '100px',
@@ -129,43 +134,43 @@ function UserComponent(props :any) {
                 </AspectRatio>
             </CardOverflow>
             <Typography level="title-lg" sx={{ mt: 'calc(var(--icon-size) / 2)' }}>
-                { props.userObj.tinNumber }
+                {props.userObj.tinNumber}
             </Typography>
             <CardContent sx={{ width: '100%' }}>
                 <Chip
                     variant="outlined"
                     color="primary"
                     size="sm"
-                    sx={{ pointerEvents: 'none', m:0.5 , height: 'auto', display: 'block',whiteSpace: 'normal' }}
+                    sx={{ pointerEvents: 'none', m: 0.5, height: 'auto', display: 'block', whiteSpace: 'normal' }}
                 >
-                    The Users id is: { props.userObj.id }
+                    The Users id is: {props.userObj.id}
                 </Chip>
 
                 <Chip
                     variant="outlined"
                     color="primary"
                     size="sm"
-                    sx={{ pointerEvents: 'none', m:0.5, height: 'auto', display: 'block',whiteSpace: 'normal' }}
+                    sx={{ pointerEvents: 'none', m: 0.5, height: 'auto', display: 'block', whiteSpace: 'normal' }}
                 >
-                    The users e-mail is: { props.userObj.email }
+                    The users e-mail is: {props.userObj.email}
                 </Chip>
 
                 <Chip
                     variant="outlined"
                     color="primary"
                     size="sm"
-                    sx={{ pointerEvents: 'none', m:0.5, height: 'auto', display: 'block',whiteSpace: 'normal' }}
+                    sx={{ pointerEvents: 'none', m: 0.5, height: 'auto', display: 'block', whiteSpace: 'normal' }}
                 >
-                    { props.userObj.firstName }  { props.userObj.lastName }
+                    The user fullname is: {props.userObj.firstName}  {props.userObj.lastName}
                 </Chip>
 
                 <Chip
                     variant="outlined"
                     color="primary"
                     size="sm"
-                    sx={{ pointerEvents: 'none', m:0.5, height: 'auto', display: 'block',whiteSpace: 'normal' }}
+                    sx={{ pointerEvents: 'none', m: 0.5, height: 'auto', display: 'block', whiteSpace: 'normal' }}
                 >
-                    { props.userObj.roles[0].name }
+                    Assigned Roles: {props.userObj.roles[0].name}
                 </Chip>
 
             </CardContent>
@@ -180,6 +185,8 @@ function UserComponent(props :any) {
                 {/*Edit User dialogue and button*/}
                 <Button variant="solid" color="primary" onClick={() => {
                     setOpenEdit(true)
+                    setTinNumber(props.userObj.tinNumber)
+                    setRole(props.userObj.roles[0].name)
                 }}>
                     Edit
                 </Button>
@@ -203,10 +210,9 @@ function UserComponent(props :any) {
                         />
 
                         <TextField
-                            autoFocus
                             required
                             margin="dense"
-                            id="firstname"
+                            id="firstName"
                             name="firstname"
                             label="First name"
                             type="string"
@@ -216,10 +222,9 @@ function UserComponent(props :any) {
                         />
 
                         <TextField
-                            autoFocus
                             required
                             margin="dense"
-                            id="lastname"
+                            id="lastName"
                             name="lastname"
                             label="Last name"
                             type="string"
@@ -229,7 +234,6 @@ function UserComponent(props :any) {
                         />
 
                         <TextField
-                            autoFocus
                             required
                             margin="dense"
                             id="password"
@@ -242,25 +246,51 @@ function UserComponent(props :any) {
                         />
 
                         <TextField
-                            autoFocus
                             required
                             margin="dense"
-                            id="tinnuber"
+                            id="tinNumber"
                             name="tin"
+                            defaultValue={tinNumber}
                             label="Tin Number"
-                            type="string"
+                            type="text"
                             fullWidth
                             variant="standard"
-                            onChange={handleChangeTinNumber}
+                            onChange={(e) => setTinNumber(e.target.value)}
                         />
+                        <Select
+                            value={role}
+                            label="Role"
+                            defaultValue={props.userObj.roles[0].name}
+                            sx={{ width: 'auto', height: 40, border: "1px solid", color: "#000" }}
+                            onChange={(e) => setRole(e.target.value)}
+                        >
+                            <MenuItem value={'ROLE_ADMIN'}>ADMIN</MenuItem>
+                            <MenuItem value={'ROLE_EMPLOYEE'}>EMPLOYEE</MenuItem>
+                            <MenuItem value={'ROLE_FARMER'}>FARMER</MenuItem>
+                        </Select>
 
 
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseEdit}>Cancel</Button>
                         <Button onClick={() => {
+                            if (!tinNumber.trim()) {
+                                setIsErrorDialogOpen(true);
+                                return;
+                            }
+
+                            edit_user(props.userObj.tinNumber, tinNumber, firstName, LastName, password, email, role)
+                                .then((res) => {
+                                    console.log(res);
+                                    // You might want to handle successful submission here
+                                })
+                                .catch((e) => {
+                                    console.log(e);
+                                    setSubmissionErrorMessage('Failed to edit user. Please try again.'); // Set a custom error message
+                                    setIsSubmissionErrorDialogOpen(true);
+                                });
                             setOpenEdit(false)
-                        }}>Create New User</Button>
+                        }}>Update User</Button>
                     </DialogActions>
                 </Dialog>
 
@@ -276,19 +306,37 @@ function UserComponent(props :any) {
                     onClose={handleCloseNo}
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+                    <DialogTitle>{"Delete User?"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-slide-description">
                             Are you sure that you would like to detele the user with tin: {props.userObj.tinNumber}
                         </DialogContentText>
                     </DialogContent>
-                    <DialogActions sx={{display: 'flex', justifyContent: "flex-end" }}>
-                        <Button onClick={() => handleCloseYes( props.userObj.tinNumber )}>Yes</Button>
+                    <DialogActions sx={{ display: 'flex', justifyContent: "flex-end" }}>
+                        <Button onClick={() => handleCloseYes(props.userObj.tinNumber)}>Yes</Button>
                         <Button onClick={handleCloseNo}>No</Button>
                     </DialogActions>
                 </Dialog>
 
             </CardActions>
+            <Dialog open={isSubmissionErrorDialogOpen} onClose={() => setIsSubmissionErrorDialogOpen(false)}>
+                <DialogTitle>Error</DialogTitle>
+                <DialogContent>
+                    <Typography>{submissionErrorMessage}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsSubmissionErrorDialogOpen(false)}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={isErrorDialogOpen} onClose={() => setIsErrorDialogOpen(false)}>
+                <DialogTitle>Error</DialogTitle>
+                <DialogContent>
+                    <Typography>TIN number is required.</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsErrorDialogOpen(false)}>OK</Button>
+                </DialogActions>
+            </Dialog>
         </Card>
     );
 }
