@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from "@mui/joy/Typography";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import Divider from "@mui/joy/Divider";
@@ -8,52 +8,51 @@ import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import AgricultureRoundedIcon from "@mui/icons-material/AgricultureRounded";
-import {TextField} from "@mui/material";
+import { TextField } from "@mui/material";
 import CardActions from "@mui/joy/CardActions";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
-import {DatePicker} from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import moment from "moment";
 import dayjs from "dayjs";
+import emailjs from "@emailjs/browser";
 
 function ScheduleApointmentEmployeePage(props: any) {
 
 
-    const [acres, setAcres] = useState(0);
+    const [appointment, setAppointment] = useState<dayjs.Dayjs | null>(null);
+    const [damageDesc, setDamageDesc] = useState('');
+    const [farmerMail, setFarmerMail] = useState('');
 
-    let [apointment, setApointment] = useState(null);
-    let [damageDesc, setDamageDesc] = useState('');
-    let [famrerMail, setFarmerMail] = useState('');
-
-    const handleFormSubmit= () => {
-        if (apointment && damageDesc && famrerMail){
-            console.log(apointment + damageDesc + famrerMail)
-        }
-
-        //TODO - Add a service file that will send and email to the given adress
-        // create_form(location, acres, cropType, damageDesc).then((res) => {
-        //     console.log(res)
-        // }).catch((e) => {
-        //     console.log(e)
-        // })
-
-    };
-
-    //Fetch user email from local memory to send email
-    // useEffect to call the function when the component is loaded
     useEffect(() => {
-
-        const farmer_mail: string | null = localStorage.getItem('farmerMail')
-
-        if(farmer_mail !== null) {
-
-            setFarmerMail(farmer_mail)
+        const farmerMailFromLocalStorage: string | null = localStorage.getItem('farmerMail');
+        if (farmerMailFromLocalStorage !== null) {
+            setFarmerMail(farmerMailFromLocalStorage);
         }
-        // The empty dependency array ensures that this effect runs only once on component mount
     }, []);
+
+    const handleFormSubmit = async () => {
+        if (appointment && damageDesc && farmerMail) {
+            // Send email using EmailJS
+            try {
+                const templateParams = {
+                    to_email: farmerMail,
+                    appointment_date: appointment.format('YYYY-MM-DD'),
+                    damage_description: damageDesc,
+                };
+
+                await emailjs.send('argo_dit', 'argo_disaster_dit', templateParams, 'dALT3J8sUziPzlSja');
+                console.log('Email sent successfully');
+            } catch (error) {
+                console.error('Error sending email:', error);
+            }
+        } else {
+            console.error('Invalid input');
+        }
+    };
 
 
     return (
@@ -81,25 +80,19 @@ function ScheduleApointmentEmployeePage(props: any) {
             >
                 <FormControl sx={{ gridColumn: '1/-1' }}>
                     <FormLabel>Farmer Email</FormLabel>
-                    <Input endDecorator={<EmailRoundedIcon />} value={famrerMail} onChange={(e) => setFarmerMail(e.target.value)}/>
+                    <Input endDecorator={<EmailRoundedIcon />} value={farmerMail} onChange={(e) => setFarmerMail(e.target.value)} />
                 </FormControl>
                 <FormControl>
                     <FormLabel>Date of the appointment to be set</FormLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Controlled picker"
-                            value={apointment}
+                            value={appointment}
                             format="DD/MM/YYYY"
                             onChange={(newValue) => {
                                 if (newValue !== null) {
-
-                                    // @ts-ignore
-                                    console.log(dayjs(newValue.$d).format('YYYY-MM-DD'))
-                                    // @ts-ignore
-                                    setApointment(dayjs(newValue.$d).format('YYYY-MM-DD'))
-
+                                    setAppointment(dayjs(newValue.toDate())); // Convert Date object to Dayjs
                                 }
-
                             }}
                         />
                     </LocalizationProvider>
@@ -115,7 +108,7 @@ function ScheduleApointmentEmployeePage(props: any) {
                     />
                 </FormControl>
                 <CardActions sx={{ gridColumn: '1/-1' }}>
-                    <Button variant="solid" color="primary" onClick={handleFormSubmit }>
+                    <Button variant="solid" color="primary" onClick={handleFormSubmit}>
                         Arange Apointment & Notify User
                     </Button>
                 </CardActions>
