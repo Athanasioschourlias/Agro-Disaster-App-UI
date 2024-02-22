@@ -41,7 +41,6 @@ function ScheduleApointmentEmployeePage(props: any) {
                 const templateParams = {
                     to_email: farmerMail,
                     appointment_date: appointment.format('YYYY-MM-DD'),
-                    damage_description: damageDesc,
                 };
 
                 await emailjs.send('argo_dit', 'argo_disaster_dit', templateParams, 'dALT3J8sUziPzlSja');
