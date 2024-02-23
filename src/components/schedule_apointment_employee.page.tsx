@@ -43,7 +43,7 @@ function ScheduleApointmentEmployeePage(props: any) {
                     appointment_date: appointment.format('YYYY-MM-DD'),
                 };
 
-                await emailjs.send('argo_dit', 'argo_disaster_dit', templateParams, 'dALT3J8sUziPzlSja');
+                await emailjs.send('argo_dit', 'argo_disaster_dit', templateParams, EMAIL_JS_PUBKEY);
                 console.log('Email sent successfully');
             } catch (error) {
                 console.error('Error sending email:', error);
